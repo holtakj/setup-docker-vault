@@ -1,0 +1,20 @@
+version: "3.3"
+
+services:
+  hashicorp-vault:
+    restart: unless-stopped
+    image: ${VAULT_IMAGE}
+    container_name: ${VAULT_CONTAINER_NAME}
+    entrypoint: vault server -config=/vault/config/vault-server.hcl
+    environment:
+      - VAULT_ADDR:http://127.0.0.1:8200
+    volumes:
+      - ${VAULT_LOGS_DIR}:/vault/logs
+      - ${VAULT_STORAGE_DIR}:/vault/file
+      - ./config:/vault/config:ro
+      - ./src:/scripts:ro
+      - ./.env:/.env:ro
+    cap_add:
+      - IPC_LOCK
+
+
